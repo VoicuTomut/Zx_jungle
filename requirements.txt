@@ -1,2 +1,5 @@
+setuptools
+wheel
 pyzx
 cirq
+jupyterlab
