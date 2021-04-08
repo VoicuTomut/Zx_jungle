@@ -4,9 +4,6 @@ https://arxiv.org/pdf/quant-ph/9503016.pdf
 """
 import numpy as np
 
-# import pyzx as zx
-# from fractions import Fraction
-
 def add_ansatz_gzb(c, nr_q, nr_p, initialize=True):
     """
     c: quantum circuit

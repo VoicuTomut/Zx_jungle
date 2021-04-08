@@ -1,5 +1,6 @@
-import numpy as np
 import pyzx as zx
+
+
 
 # zx.settings.drawing_backend = "matplotlib"
 zx.settings.mode = "shell"
@@ -30,7 +31,6 @@ circuit2 = zx.generate.cliffordT(
     backend=None,
 )
 zx.draw(circuit2).savefig("2.png")
-
 
 no_hadamard = False  # Whether hadamard edges are allowed to be placed.
 t_gates = False  #

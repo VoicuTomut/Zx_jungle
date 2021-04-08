@@ -3,36 +3,21 @@ import numpy as np
 import pyzx as zx
 import cirq
 
-CNOT = cirq.CNOT
-CCZ = cirq.CCZ
-TOFFOLI = cirq.TOFFOLI
-
-Z = cirq.Z
-X = cirq.X
-Y = cirq.Y
-
-HAD = cirq.H
-S = cirq.S
-S_ = cirq.S ** -1
-T = cirq.T
-T_ = cirq.T ** -1
-
 gate_colection = {
-    "CNOT": CNOT,
-    "CCZ": CCZ,
-    "TOFFOLI": TOFFOLI,
-    "Z": Z,
-    "X": X,
-    "Y": Y,
-    "HAD": HAD,
-    "S": S,
-    "S*": S_,
-    "T": T,
-    "T*": T_,
+    "CNOT": cirq.CNOT,
+    "CCZ": cirq.CCZ,
+    "TOFFOLI": cirq.TOFFOLI,
+    "Z": cirq.Z,
+    "X": cirq.X,
+    "Y": cirq.Y,
+    "HAD": cirq.H,
+    "S": cirq.S,
+    "S*":  cirq.S ** -1,
+    "T": cirq.T,
+    "T*": cirq.T ** -1,
 }
 
-
-def to_Cirq_circuit(gc):
+def to_cirq_circuit(gc):
 
     nr_qubits = gc.qubits
     q_list = []
