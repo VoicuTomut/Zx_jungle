@@ -2,18 +2,46 @@
 The following gates are constructed using circuit identities from
 https://arxiv.org/pdf/quant-ph/9503016.pdf
 """
-
-
 import numpy as np
 
 # import pyzx as zx
 # from fractions import Fraction
 
+def add_ansatz_gzb(c, nr_q, nr_p, initialize=True):
+    """
+    c: quantum circuit
+    nr_q: number of qubits
+    nr_p: number of qubits initialized in state 1
+    initialize
+    """
+
+    if initialize == True:
+        for i in range(nr_p):
+            c.add_gate("NOT", i)
+
+    # Ansatz
+    it = 0
+    start = nr_p - 1
+    limit = nr_q
+
+    while start != -1:
+
+        cq = start
+        tq = start + 1
+
+        while tq < limit:
+            add_GZB(c, cq, tq, np.random.normal(0, 1, 1)[0] * 2 * np.pi)
+            cq = cq + 1
+            tq = tq + 1
+            it = it + 1
+
+        start = start - 1
+        limit = limit - 1
 
 def add_CRZ(c, cq, tq, t):
     """
     c: quantum circuit
-    cq: contol qubit
+    cq: control qubit
     tq: target qubit
     t: theta
     """
@@ -27,7 +55,7 @@ def add_CRZ(c, cq, tq, t):
 def add_CRX(c, cq, tq, t):
     """
     c: quantum circuit
-    cq: contol qubit
+    cq: control qubit
     tq: target qubit
     t: theta
     """
@@ -42,7 +70,7 @@ def add_CRX(c, cq, tq, t):
 def add_CRY(c, cq, tq, t):
     """
     c: quantum circuit
-    cq: contol qubit
+    cq: control qubit
     tq: target qubit
     t: theta
     """
@@ -56,7 +84,7 @@ def add_CRY(c, cq, tq, t):
 def add_GZB(c, q1, q2, t):
     """
     c: quantum circuit
-    cq: contol qubit
+    cq: control qubit
     tq: target qubit
     t: theta
     """
