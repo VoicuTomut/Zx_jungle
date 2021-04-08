@@ -4,7 +4,33 @@ https://arxiv.org/pdf/quant-ph/9503016.pdf
 """
 import numpy as np
 
-def add_ansatz_gzb(c, nr_q, nr_p, initialize=True):
+
+def add_ansatz_hardwareefficient(c,nr_q,depth,params,Z=True,Y=True,X=True):
+    
+    index=0
+    for i in range(depth):
+        #parameterizable layer
+        for j in range(nr_q):
+            
+            if Z:
+                c.add_gate("ZPhase", j, phase=params[index])
+                index=index+1
+            
+            if X:
+                c.add_gate("XPhase", j, phase=params[index])
+                index=index+1
+            
+            if Y:
+                c.add_gate("S", j, adjoint=True)
+                c.add_gate("XPhase", j, phase=params[index])
+                index=index+1
+                c.add_gate("S", j)
+                
+        #entangelment layer
+        for j in range(nr_q-1):
+            c.add_gate("CNOT", j, j+1)
+            
+def add_ansatz_gzb(c, nr_q, nr_p,params,initialize=True):
     """
     c: quantum circuit
     nr_q: number of qubits
@@ -27,13 +53,15 @@ def add_ansatz_gzb(c, nr_q, nr_p, initialize=True):
         tq = start + 1
 
         while tq < limit:
-            add_GZB(c, cq, tq, np.random.normal(0, 1, 1)[0] * 2 * np.pi)
+            add_GZB(c, cq, tq, params[it])
             cq = cq + 1
             tq = tq + 1
             it = it + 1
 
         start = start - 1
         limit = limit - 1
+        
+        
 
 def add_CRZ(c, cq, tq, t):
     """
