@@ -3,3 +3,4 @@ wheel
 pyzx
 cirq
 jupyterlab
+black
