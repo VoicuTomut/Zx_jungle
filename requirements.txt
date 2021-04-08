@@ -1,5 +1,7 @@
 setuptools
 wheel
+ipywidgets
 pyzx
 cirq
 jupyterlab
+black
