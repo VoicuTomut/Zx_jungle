@@ -1,4 +1,5 @@
-# Experimental code during the QOSF programme
+# McSimulator
+## Experimental code during the QOSF programme
 
 To install and configure a virtual environment
 ```
