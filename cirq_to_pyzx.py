@@ -6,6 +6,7 @@ https://github.com/oumjunior/CirqPyZX/edit/master/cirqpyzx/cirq_pyzx.py
 
 import cirq
 import pyzx as zx
+import numpy as np
 
 
 class Cirq_PyZX:
@@ -37,8 +38,14 @@ class Cirq_PyZX:
         # In each moment in the Cirq circuit identify the operations, the involved qubits
         # and do the corresponding operation in PyZX
         # The supported operations are {T, X, Toffoli, CNOT, Z, CZ, H, S, CCZ and their inverse}
+        mo=0
         for moment in circuit:
+            mo=mo+1
+            #print('mo:',mo)
+            op_id=0
             for op in moment:
+                op_id=op_id+1
+                #print('op_id:',op_id)
                 if isinstance(op, cirq.GateOperation) and op.gate == cirq.T:
                     qbts = op.qubits
                     key = qbts[0]
@@ -99,16 +106,34 @@ class Cirq_PyZX:
                         )
                     )
 
-                elif isinstance(op, cirq.GateOperation) and op.gate == cirq.TOFFOLI:
-                    qbts = op.qubits
-                    ctrl0, ctrl1, trgt = qbts[0], qbts[1], qbts[2]
-                    self.circuit_zx.add_gate(
-                        zx.gates.Tofolli(
-                            ctrl1=qubit_id_to_zx_id[ctrl0],
-                            ctrl2=qubit_id_to_zx_id[ctrl1],
-                            target=qubit_id_to_zx_id[trgt],
-                        )
-                    )
+                elif isinstance(op, cirq.GateOperation) and isinstance(op.gate,cirq.ZPowGate):
+                    tq = op.qubits[0]
+                    t = op.gate._exponent
+                    self.circuit_zx.add_gate("ZPhase", qubit_id_to_zx_id[tq], phase=t/2)
+                    
+                elif isinstance(op, cirq.ControlledOperation) and op.gate.sub_gate==cirq.X:
+                    
+                    if (len(op.qubits)>2) :
+                        raise TypeError("{!r}: Gates with multiple control are not supported for conversion to pyzx yet".format(op))
+                        
+                    ctrl= op.qubits[0]
+                    trgt= op.qubits[1]
+                    self.circuit_zx.add_gate(zx.gates.CNOT(control=qubit_id_to_zx_id[ctrl],
+                                              target=qubit_id_to_zx_id[trgt],))
+
+                elif isinstance(op, cirq.ControlledOperation) and op.gate.sub_gate==cirq.Z:
+                    
+                    if (len(op.qubits)>2) :
+                        raise TypeError("{!r}: Gates with multiple control are not supported for conversion to pyzx yet".format(op))
+                        
+                    ctrl= op.qubits[0]
+                    trgt= op.qubits[1]
+                    self.circuit_zx.add_gate(zx.gates.CZ(control=qubit_id_to_zx_id[ctrl],
+                                                         target=qubit_id_to_zx_id[trgt],))
+                    
+
+
+                
 
                 elif not isinstance(op, cirq.GateOperation):
                     raise TypeError("{!r} is not a gate operation.".format(op))
